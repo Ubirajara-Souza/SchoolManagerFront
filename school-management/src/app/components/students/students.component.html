@@ -1,0 +1,57 @@
+<div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+    <button mat-flat-button color="primary" (click)="openDialog()">Adicionar Aluno</button>
+</div>
+
+<div style="margin-bottom: 8px;">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Buscar aluno por nome</mat-label>
+        <input matInput [(ngModel)]="nameFilter" name="nameFilter" />
+    </mat-form-field>
+</div>
+
+<div style="margin-bottom: 8px;">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Buscar aluno por CPF</mat-label>
+        <input matInput [(ngModel)]="cpfFilter" name="cpfFilter" mask="000.000.000-00" />
+    </mat-form-field>
+</div>
+
+<div style="display: flex; gap: 8px; margin-bottom: 24px;">
+    <button mat-flat-button color="primary" (click)="loadStudents()">Filtrar</button>
+    <button mat-flat-button color="warn" (click)="clearFilters()">Limpar Filtros</button>
+</div>
+
+<table mat-table [dataSource]="students" class="mat-elevation-z2 full-width">
+    <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef> Código </th>
+        <td mat-cell *matCellDef="let s"> {{ s.code }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let s"> {{ s.name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cpf">
+        <th mat-header-cell *matHeaderCellDef> CPF </th>
+        <td mat-cell *matCellDef="let s"> {{ s.cpf }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let s">
+            <button mat-icon-button color="accent" (click)="openDetails(s.code)" matTooltip="Detalhes do Aluno">
+                <mat-icon>info</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="openDialog(s)" matTooltip="Editar Aluno">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="delete(s.code)" matTooltip="Excluir Aluno">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['code', 'name', 'cpf', 'actions']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['code', 'name', 'cpf', 'actions']"></tr>
+</table>

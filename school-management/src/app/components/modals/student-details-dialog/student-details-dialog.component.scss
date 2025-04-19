@@ -1,0 +1,33 @@
+.details-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.section-title {
+    margin-top: 16px;
+    font-weight: 600;
+    font-size: 16px;
+    color: #3f51b5;
+}
+
+.details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.details-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    padding: 4px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.label {
+    font-weight: 500;
+    color: #3f51b5;
+}

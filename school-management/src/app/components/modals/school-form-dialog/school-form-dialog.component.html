@@ -1,0 +1,18 @@
+<h2 mat-dialog-title class="dialog-title">{{ isEdit ? 'Editar Escola' : 'Adicionar Escola' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" mat-dialog-content>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Descrição</mat-label>
+    <input matInput formControlName="description" />
+    <mat-error *ngIf="form.get('description')?.hasError('required')">
+      Descrição é obrigatória
+    </mat-error>
+  </mat-form-field>
+</form>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="warn" style="background-color: #d32f2f; color: white;" (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="onSubmit()">
+    {{ isEdit ? 'Atualizar' : 'Adicionar' }}
+  </button>
+</mat-dialog-actions>

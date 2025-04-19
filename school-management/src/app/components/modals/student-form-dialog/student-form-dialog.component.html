@@ -1,0 +1,76 @@
+<h2 mat-dialog-title class="dialog-title">{{ isEdit ? 'Editar Aluno' : 'Adicionar Aluno' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" mat-dialog-content class="form-container">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Data de Nascimento</mat-label>
+        <input matInput type="date" formControlName="dateOfBirth" required />
+      </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" mask="000.000.000-00" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Celular</mat-label>
+        <input matInput formControlName="cellPhone" mask="(00) 00000-0000" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Escola</mat-label>
+        <mat-select formControlName="codeSchool" required>
+            <mat-option *ngFor="let school of schools" [value]="school.code">
+                {{ school.description }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div formGroupName="address" class="address-section">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Rua</mat-label>
+            <input matInput formControlName="street" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Número</mat-label>
+            <input matInput formControlName="number" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Complemento</mat-label>
+            <input matInput formControlName="complement" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Bairro</mat-label>
+            <input matInput formControlName="neighborhood" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Cidade</mat-label>
+            <input matInput formControlName="city" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Estado</mat-label>
+            <input matInput formControlName="state" maxlength="2" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>CEP</mat-label>
+            <input matInput formControlName="zipCode" mask="00000-000" required />
+        </mat-form-field>
+    </div>
+</form>
+
+<mat-dialog-actions align="end">
+    <button mat-flat-button color="warn" style="background-color: #d32f2f; color: white;" (click)="onCancel()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="onSubmit()">
+        {{ isEdit ? 'Atualizar' : 'Adicionar' }}
+    </button>
+</mat-dialog-actions>

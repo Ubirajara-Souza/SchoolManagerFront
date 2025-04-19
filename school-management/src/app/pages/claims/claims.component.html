@@ -1,0 +1,47 @@
+<mat-card class="auth-card">
+  <h2>Adicionar Autorizações</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Autorizações para quais telas?</mat-label>
+      <mat-select formControlName="claimTypes" multiple>
+        <mat-option value="School">Escolas</mat-option>
+        <mat-option value="Student">Alunos</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Tipo de autorizações?</mat-label>
+      <mat-select formControlName="claimValues" multiple>
+        <mat-option value="Add">Cadastrar</mat-option>
+        <mat-option value="Update">Alterar</mat-option>
+        <mat-option value="Delete">Excluir</mat-option>
+        <mat-option value="GetAll">Listar todos</mat-option>
+        <mat-option value="GetById">Listar individual</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div style="display: flex; gap: 8px;">
+      <button mat-raised-button color="primary" class="full-width" style="background-color: #1565c0; color: white;" type="submit">
+        Adicionar Autorizações
+      </button>
+      <button mat-raised-button class="full-width" type="button" style="background-color: #d32f2f; color: white;"
+        (click)="cancelar()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="errorMessages.length > 0" class="error-messages">
+    <mat-card style="margin-top: 16px; padding: 12px; background-color: #ffebee; color: #c62828;">
+      <ul>
+        <li *ngFor="let msg of errorMessages">{{ msg }}</li>
+      </ul>
+    </mat-card>
+  </div>
+</mat-card>

@@ -1,0 +1,40 @@
+<mat-card class="auth-card">
+  <h2>Login</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Ex: teste@email.com" />
+      <mat-error *ngIf="form.get('email')?.hasError('required')">O email é obrigatório</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Insira um email válido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Senha</mat-label>
+      <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+        placeholder="Ex: Root@123" />
+      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.get('password')?.hasError('required')">A senha é obrigatória</mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('minlength')">A senha deve ter no mínimo 8 caracteres</mat-error>
+    </mat-form-field>
+
+    <small style="display: block; margin-bottom: 10px; color: gray;">
+      A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, número e caractere especial. <br>
+      <strong>Exemplo válido: Root&#64;123</strong>
+    </small>
+
+    <div *ngIf="errorMessages.length > 0" class="error-box">
+      <mat-card color="warn"
+        style="background: #ffcdd2; margin-bottom: 15px; margin-top: 15px; padding: 10px; border-radius: 8px;">
+        <ul>
+          <li *ngFor="let error of errorMessages">{{ error }}</li>
+        </ul>
+      </mat-card>
+    </div>
+
+    <button mat-raised-button color="primary" style="background-color: #1565c0; color: white;" class="full-width">Login</button>
+    <p class="text-center">Não tem uma conta? <a routerLink="/register">Cadastre-se aqui</a></p>
+  </form>
+</mat-card>

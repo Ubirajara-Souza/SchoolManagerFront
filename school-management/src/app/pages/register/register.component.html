@@ -1,0 +1,59 @@
+<mat-card class="auth-card">
+  <h2>Cadastre-se</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" placeholder="Ex: TESTE" />
+      <mat-error *ngIf="form.get('name')?.hasError('required')">
+        O nome é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Ex: teste@email.com" />
+      <mat-error *ngIf="form.get('email')?.hasError('required')">O email é obrigatório</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Insira um email válido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Senha</mat-label>
+      <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Ex: Root@123">
+      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.get('password')?.hasError('required')">A senha é obrigatória</mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('minlength')">A senha deve ter no mínimo 8 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Confirmar Senha</mat-label>
+      <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
+        placeholder="Confirme a senha">
+      <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+        <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('required')">A confirmação de senha é
+        obrigatória</mat-error>
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('passwordMismatch')">As senhas não coincidem</mat-error>
+    </mat-form-field>
+
+    <small style="color: gray; margin-bottom: 10px; display: block;">
+      A senha deve conter ao menos 8 caracteres, uma letra maiúscula, um número e um caractere especial.<br>
+      <strong>Exemplo: Root&#64;123</strong>
+    </small>
+
+    <div *ngIf="errorMessages.length > 0" class="error-box">
+      <mat-card color="warn"
+        style="background: #ffcdd2; margin-bottom: 15px; margin-top: 15px; padding: 10px; border-radius: 8px;">
+        <ul>
+          <li *ngFor="let error of errorMessages">{{ error }}</li>
+        </ul>
+      </mat-card>
+    </div>
+
+    <button mat-raised-button color="primary" class="full-width" style="background-color: #1565c0; color: white;">Cadastre-se</button>
+    <p class="text-center">Já tem uma conta? <a routerLink="/login">Faça login aqui</a></p>
+  </form>
+</mat-card>

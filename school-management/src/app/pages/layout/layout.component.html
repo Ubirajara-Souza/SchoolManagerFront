@@ -1,0 +1,32 @@
+<mat-toolbar class="top-toolbar">
+  <span class="header-title">Gerenciador de Escolas</span>
+  <span class="spacer"></span>
+  <button mat-icon-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container class="mat-elevation-z2 layout-container">
+  <mat-sidenav class="custom-sidenav" mode="side" opened>
+    <div class="sidenav-title">
+      <mat-icon class="sidenav-icon">menu</mat-icon>
+      <span class="sidenav-title-text">Menu</span>
+    </div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/schools" routerLinkActive="active-link">
+        <mat-icon>school</mat-icon>
+        <span class="nav-text">Escolas</span>
+      </a>
+      <a mat-list-item routerLink="/students" routerLinkActive="active-link">
+        <mat-icon>group</mat-icon>
+        <span class="nav-text">Alunos</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="mat-typography main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

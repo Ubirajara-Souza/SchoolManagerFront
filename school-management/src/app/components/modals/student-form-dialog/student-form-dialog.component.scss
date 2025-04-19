@@ -1,0 +1,24 @@
+.dialog-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 12px;
+}
+
+.address-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
