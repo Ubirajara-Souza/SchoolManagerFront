@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'app/services/auth.service';
 import { NotificationService } from 'app/services/notification.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AddClaimDto } from 'app/models/auth/add-claim-dto';
 import { ClaimItemDto } from 'app/models/auth/claim-item-dto';
+import { RefreshTokenUserDto } from 'app/models/auth/refresh-token-user-dto';
 
 @Component({
   selector: 'app-claims',
@@ -13,6 +14,7 @@ import { ClaimItemDto } from 'app/models/auth/claim-item-dto';
   styleUrl: './claims.component.scss'
 })
 export class ClaimsComponent implements OnInit {
+  @Input() exibirAposLogin = true;
   form!: FormGroup;
   errorMessages: string[] = [];
 
@@ -20,10 +22,12 @@ export class ClaimsComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
     private readonly notification: NotificationService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.exibirAposLogin = this.route.snapshot.data['exibirAposLogin'] ?? true;
     this.initializeForm();
     this.carregarEmailSalvo();
   }
@@ -61,7 +65,19 @@ export class ClaimsComponent implements OnInit {
     this.authService.addClaim(payload).subscribe({
       next: () => {
         this.notification.showSuccess('Autorização adicionada com sucesso!');
-        this.router.navigate(['/login']);
+        if (this.exibirAposLogin) {
+          this.router.navigate(['/login']);
+        } else {
+          const refreshDto: RefreshTokenUserDto = { email };
+          this.authService.refreshToken(refreshDto).subscribe({
+            next: () => {
+              this.router.navigate(['/']);
+            },
+            error: () => {
+              this.notification.showError('Erro ao atualizar token após adicionar autorização.');
+            }
+          });
+        }
       },
       error: (err) => {
         this.errorMessages = err?.error?.errors ?? ['Erro ao adicionar autorização'];
@@ -70,6 +86,11 @@ export class ClaimsComponent implements OnInit {
   }
   cancelar(): void {
     this.form.reset();
-    this.router.navigate(['/login']);
+    if (this.exibirAposLogin) {
+      this.router.navigate(['/login']);
+    }
+    else {
+      this.router.navigate(['/']);
+    }
   }
 }

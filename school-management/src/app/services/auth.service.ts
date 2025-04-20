@@ -6,6 +6,7 @@ import { LoginUserDto } from '../models/auth/login-user-dto';
 import { RegisterUserDto } from '../models/auth/register-user-dto';
 import { AddClaimDto } from '../models/auth/add-claim-dto';
 import { LoginResponse } from '../models/auth/login-response';
+import { RefreshTokenUserDto } from 'app/models/auth/refresh-token-user-dto';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -28,6 +29,7 @@ export class AuthService {
       tap((res: any) => {
         if (res?.data?.accessToken) {
           localStorage.setItem('accessToken', res.data.accessToken);
+          localStorage.setItem('userEmail', res.data.userToken.email);
         }
       })
     );
@@ -35,6 +37,16 @@ export class AuthService {
 
   addClaim(data: AddClaimDto): Observable<void> {
     return this.http.post<void>(`${this.api}/add-claim`, data);
+  }
+
+  refreshToken(data: RefreshTokenUserDto): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.api}/refresh-token`, data).pipe(
+      tap((res: any) => {
+        if (res?.data?.accessToken) {
+          localStorage.setItem('accessToken', res.data.accessToken);
+        }
+      })
+    );
   }
 
   logout(): Observable<void> {

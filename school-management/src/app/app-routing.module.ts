@@ -12,7 +12,6 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'claims', component: ClaimsComponent },
-
   {
     path: '',
     component: LayoutComponent,
@@ -20,10 +19,11 @@ const routes: Routes = [
     children: [
       { path: 'students', component: StudentsComponent },
       { path: 'schools', component: SchoolsComponent },
-      { path: '', redirectTo: 'schools', pathMatch: 'full' }
+      { path: 'internal-claims', component: ClaimsComponent, data: { exibirAposLogin: false } },
+      { path: '', redirectTo: 'students', pathMatch: 'full' }
     ]
   },
-  
+
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
 
@@ -32,4 +32,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
-
