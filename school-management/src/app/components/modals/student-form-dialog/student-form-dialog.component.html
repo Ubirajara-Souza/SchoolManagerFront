@@ -1,44 +1,78 @@
 <h2 mat-dialog-title class="dialog-title">{{ isEdit ? 'Editar Aluno' : 'Adicionar Aluno' }}</h2>
 
+<div *ngIf="errorMessages.length > 0" class="alert alert-danger" style="margin-bottom: 12px;">
+    <ul>
+        <li *ngFor="let error of errorMessages">{{ error }}</li>
+    </ul>
+</div>
+
 <form [formGroup]="form" (ngSubmit)="onSubmit()" mat-dialog-content class="form-container">
     <mat-form-field appearance="fill" class="full-width">
         <mat-label>Nome</mat-label>
-        <input matInput formControlName="name" required />
+        <input matInput formControlName="name" maxlength="200" />
+        <mat-error *ngIf="form.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
+        <mat-error *ngIf="form.get('name')?.hasError('maxlength')">Máximo 200 caracteres</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
         <mat-label>Data de Nascimento</mat-label>
-        <input matInput type="date" formControlName="dateOfBirth" required />
-      </mat-form-field>
+        <input matInput formControlName="dateOfBirth" [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+            maxlength="10" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+        <mat-error *ngIf="form.get('dateOfBirth')?.hasError('required')">
+            Data é obrigatória
+        </mat-error>
+        <mat-error *ngIf="form.get('dateOfBirth')?.hasError('invalid')">
+            Data inválida. Use o formato dd/mm/aaaa e uma data real entre 1900 e hoje.
+        </mat-error>
+    </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
         <mat-label>CPF</mat-label>
-        <input matInput formControlName="cpf" mask="000.000.000-00" required />
+        <input matInput formControlName="cpf" mask="000.000.000-00" maxlength="14" />
+        <mat-error *ngIf="form.get('cpf')?.hasError('required')">CPF é obrigatório</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
         <mat-label>Celular</mat-label>
-        <input matInput formControlName="cellPhone" mask="(00) 00000-0000" required />
+        <input matInput formControlName="cellPhone" mask="(00) 00000-0000" maxlength="15" />
+        <mat-error *ngIf="form.get('cellPhone')?.hasError('required')">Celular é obrigatório</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
         <mat-label>Escola</mat-label>
-        <mat-select formControlName="codeSchool" required>
+        <mat-select formControlName="codeSchool">
             <mat-option *ngFor="let school of schools" [value]="school.code">
                 {{ school.description }}
             </mat-option>
         </mat-select>
+        <mat-error *ngIf="form.get('codeSchool')?.hasError('required')">Selecione uma escola</mat-error>
     </mat-form-field>
 
     <div formGroupName="address" class="address-section">
+
         <mat-form-field appearance="fill" class="full-width">
+            <mat-label>CEP</mat-label>
+            <input matInput formControlName="zipCode" mask="00000-000" (blur)="searchZip()" />
+            <mat-error *ngIf="form.get('address.zipCode')?.hasError('required')">CEP é obrigatório</mat-error>
+            <mat-error
+                *ngIf="form.get('address.zipCode')?.hasError('minlength') || form.get('address.zipCode')?.hasError('maxlength')">
+                CEP deve ter 8 dígitos
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width full-row">
             <mat-label>Rua</mat-label>
-            <input matInput formControlName="street" required />
+            <input matInput formControlName="street" />
+            <mat-error *ngIf="form.get('address.street')?.hasError('required')">Rua é obrigatória</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Número</mat-label>
-            <input matInput formControlName="number" required />
+            <input matInput formControlName="number" />
+            <mat-error *ngIf="form.get('address.number')?.hasError('required')">Número é obrigatório</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
@@ -48,28 +82,31 @@
 
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Bairro</mat-label>
-            <input matInput formControlName="neighborhood" required />
+            <input matInput formControlName="neighborhood" />
+            <mat-error *ngIf="form.get('address.neighborhood')?.hasError('required')">Bairro é obrigatório</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Cidade</mat-label>
-            <input matInput formControlName="city" required />
+            <input matInput formControlName="city" />
+            <mat-error *ngIf="form.get('address.city')?.hasError('required')">Cidade é obrigatória</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Estado</mat-label>
-            <input matInput formControlName="state" maxlength="2" required />
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="full-width">
-            <mat-label>CEP</mat-label>
-            <input matInput formControlName="zipCode" mask="00000-000" required />
+            <input matInput formControlName="state" maxlength="2" />
+            <mat-error *ngIf="form.get('address.state')?.hasError('required')">Estado é obrigatório</mat-error>
+            <mat-error
+                *ngIf="form.get('address.state')?.hasError('minlength') || form.get('address.state')?.hasError('maxlength')">
+                Estado deve ter 2 letras
+            </mat-error>
         </mat-form-field>
     </div>
 </form>
 
 <mat-dialog-actions align="end">
-    <button mat-flat-button color="warn" style="background-color: #d32f2f; color: white;" (click)="onCancel()">Cancelar</button>
+    <button mat-flat-button color="warn" style="background-color: #d32f2f; color: white;"
+        (click)="onCancel()">Cancelar</button>
     <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="onSubmit()">
         {{ isEdit ? 'Atualizar' : 'Adicionar' }}
     </button>

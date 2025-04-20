@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'app/services/auth.service';
+import { NotificationService } from 'app/services/notification.service';
 import { Router } from '@angular/router';
 import { AddClaimDto } from 'app/models/auth/add-claim-dto';
 import { ClaimItemDto } from 'app/models/auth/claim-item-dto';
@@ -18,6 +19,7 @@ export class ClaimsComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
+    private readonly notification: NotificationService,
     private readonly router: Router
   ) { }
 
@@ -58,7 +60,7 @@ export class ClaimsComponent implements OnInit {
 
     this.authService.addClaim(payload).subscribe({
       next: () => {
-        alert('Autorização adicionada com sucesso!');
+        this.notification.showSuccess('Autorização adicionada com sucesso!');
         this.router.navigate(['/login']);
       },
       error: (err) => {

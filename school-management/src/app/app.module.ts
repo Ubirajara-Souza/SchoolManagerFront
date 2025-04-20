@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +18,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -30,6 +34,19 @@ import { SchoolFormDialogComponent } from './components/modals/school-form-dialo
 import { SchoolDetailsDialogComponent } from './components/modals/school-details-dialog/school-details-dialog.component';
 import { StudentFormDialogComponent } from './components/modals/student-form-dialog/student-form-dialog.component';
 import { StudentDetailsDialogComponent } from './components/modals/student-details-dialog/student-details-dialog.component';
+import { AppDateAdapter } from './shared/adapters/date-adapter';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'dd/MM/yyyy',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  }
+};
 
 @NgModule({
   declarations: [
@@ -52,6 +69,7 @@ import { StudentDetailsDialogComponent } from './components/modals/student-detai
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+    NgxMaskDirective,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -63,14 +81,21 @@ import { StudentDetailsDialogComponent } from './components/modals/student-detai
     MatListModule,
     MatTableModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSnackBarModule
   ],
   providers: [
+    provideNgxMask(),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
       multi: true
-    }
+    },
+    { provide: DateAdapter, useClass: AppDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'app/services/auth.service';
+import { NotificationService } from 'app/services/notification.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,6 +19,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
+    private readonly notification: NotificationService,
     private readonly router: Router
   ) { }
 
@@ -64,7 +66,7 @@ export class RegisterComponent implements OnInit {
 
     this.authService.register(this.form.value).subscribe({
       next: () => {
-        alert('Usuário cadastrado com sucesso!');
+        this.notification.showSuccess('Usuário cadastrado com sucesso!');
         this.router.navigate(['/claims']);
       },
       error: (err) => {

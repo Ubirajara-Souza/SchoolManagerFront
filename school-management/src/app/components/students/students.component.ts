@@ -4,6 +4,7 @@ import { StudentFormDialogComponent } from '../modals/student-form-dialog/studen
 import { StudentDetailsDialogComponent } from '../modals/student-details-dialog/student-details-dialog.component';
 import { StudentResponse } from 'app/models/students/student-response';
 import { StudentService } from 'app/services/student.service';
+import { NotificationService } from 'app/services/notification.service';
 
 @Component({
   selector: 'app-students',
@@ -19,6 +20,7 @@ export class StudentsComponent implements OnInit {
 
   constructor(
     private readonly studentService: StudentService,
+    private readonly notification: NotificationService,
     private readonly dialog: MatDialog
   ) { }
 
@@ -32,7 +34,8 @@ export class StudentsComponent implements OnInit {
         this.students = response.data;
       },
       error: (err) => {
-        this.errorMessages = err?.error?.errors ?? ['Erro ao carregar alunos'];
+        const message = (err?.error?.errors ?? ['Erro ao carregar alunos.']).join('\n');
+        this.notification.showError(message);
       }
     });
   }
@@ -54,21 +57,23 @@ export class StudentsComponent implements OnInit {
         if (student) {
           this.studentService.update(student.code, result).subscribe({
             next: () => {
-              alert('Aluno atualizado com sucesso!');
+              this.notification.showSuccess('Aluno atualizado com sucesso!');
               this.loadStudents();
             },
             error: (err) => {
-              this.errorMessages = err?.error?.errors ?? ['Erro ao atualizar aluno'];
+              const message = (err?.error?.errors ?? ['Erro ao atualizar aluno.']).join('\n');
+              this.notification.showError(message);
             }
           });
         } else {
           this.studentService.add(result).subscribe({
             next: () => {
-              alert('Aluno adicionado com sucesso!');
+              this.notification.showSuccess('Aluno adicionado com sucesso!');
               this.loadStudents();
             },
             error: (err) => {
-              this.errorMessages = err?.error?.errors ?? ['Erro ao adicionar aluno'];
+              const message = (err?.error?.errors ?? ['Erro ao adicionar aluno.']).join('\n');
+              this.notification.showError(message);
             }
           });
         }
@@ -84,8 +89,9 @@ export class StudentsComponent implements OnInit {
           data: student
         });
       },
-      error: () => {
-        alert('Erro ao buscar detalhes do aluno.');
+      error: (err) => {
+        const message = (err?.error?.errors ?? ['Erro ao buscar detalhes do aluno.']).join('\n');
+        this.notification.showError(message);
       }
     });
   }
@@ -94,11 +100,12 @@ export class StudentsComponent implements OnInit {
     if (confirm('Tem certeza que deseja excluir este aluno?')) {
       this.studentService.delete(code).subscribe({
         next: () => {
-          alert('Aluno excluído com sucesso!');
+          this.notification.showSuccess('Aluno excluído com sucesso!');
           this.loadStudents();
         },
         error: (err) => {
-          this.errorMessages = err?.error?.errors ?? ['Erro ao excluir aluno'];
+          const message = (err?.error?.errors ?? ['Erro ao excluir aluno.']).join('\n');
+          this.notification.showError(message);
         }
       });
     }

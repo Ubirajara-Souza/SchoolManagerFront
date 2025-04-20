@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(this.form.value).subscribe({
       next: () => {
-        this.router.navigate(['/schools']);
+        this.router.navigate(['/students']);
       },
       error: (err) => {
         this.errorMessages = err?.error?.errors ?? ['Erro ao fazer login'];

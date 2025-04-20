@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SchoolService } from 'app/services/school.service';
+import { NotificationService } from 'app/services/notification.service';
 import { SchoolResponse } from 'app/models/school/school-response';
 import { MatDialog } from '@angular/material/dialog';
 import { SchoolFormDialogComponent } from '../modals/school-form-dialog/school-form-dialog.component';
@@ -14,10 +15,10 @@ import { SchoolDetailsDialogComponent } from '../modals/school-details-dialog/sc
 export class SchoolsComponent implements OnInit {
   schools: SchoolResponse[] = [];
   filter = '';
-  errorMessages: string[] = [];
 
   constructor(
     private readonly schoolService: SchoolService,
+    private readonly notification: NotificationService,
     private readonly dialog: MatDialog
   ) { }
 
@@ -31,7 +32,8 @@ export class SchoolsComponent implements OnInit {
         this.schools = response.data;
       },
       error: (err) => {
-        this.errorMessages = err?.error?.errors ?? ['Erro ao carregar escolas'];
+        const message = (err?.error?.errors ?? ['Erro ao carregar escolas.']).join('\n');
+        this.notification.showError(message);
       }
     });
   }
@@ -47,21 +49,23 @@ export class SchoolsComponent implements OnInit {
         if (school) {
           this.schoolService.update(school.code, result).subscribe({
             next: () => {
-              alert('Escola atualizada com sucesso!');
+              this.notification.showSuccess('Escola atualizada com sucesso!');
               this.loadSchools();
             },
             error: (err) => {
-              this.errorMessages = err?.error?.errors ?? ['Erro ao atualizar escola'];
+              const message = (err?.error?.errors ?? ['Erro ao atualizar escola.']).join('\n');
+              this.notification.showError(message);
             }
           });
         } else {
           this.schoolService.add(result).subscribe({
             next: () => {
-              alert('Escola adicionada com sucesso!');
+              this.notification.showSuccess('Escola adicionada com sucesso!');
               this.loadSchools();
             },
             error: (err) => {
-              this.errorMessages = err?.error?.errors ?? ['Erro ao adicionar escola'];
+              const message = (err?.error?.errors ?? ['Erro ao adicionar escola.']).join('\n');
+              this.notification.showError(message);
             }
           });
         }
@@ -73,11 +77,12 @@ export class SchoolsComponent implements OnInit {
     if (confirm('Tem certeza que deseja excluir esta escola?')) {
       this.schoolService.delete(code).subscribe({
         next: () => {
-          alert('Escola excluída com sucesso!');
+          this.notification.showSuccess('Escola excluída com sucesso!');
           this.loadSchools();
         },
         error: (err) => {
-          this.errorMessages = err?.error?.errors ?? ['Erro ao excluir escola'];
+          const message = (err?.error?.errors ?? ['Erro ao excluir escola.']).join('\n');
+          this.notification.showError(message);
         }
       });
     }
@@ -92,7 +97,8 @@ export class SchoolsComponent implements OnInit {
         });
       },
       error: (err) => {
-        this.errorMessages = err?.error?.errors ?? ['Erro ao buscar detalhes da escola.'];
+        const message = (err?.error?.errors ?? ['Erro ao buscar detalhes da escola.']).join('\n');
+        this.notification.showError(message);
       }
     });
   }
